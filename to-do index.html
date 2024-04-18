@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+
+        
+        body{
+            margin:0;
+            padding:0;
+            background-color:rgba(255, 99, 71, 0.2);
+            font-family:Arial,sans-serif;
+
+
+
+        }
+        .container{
+            max-width:600px;
+            margin:20px auto;
+            background-color:floralwhite;
+            color:black;
+            padding:20px;
+            border-radius:20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding-right:30px;
+        }
+        h1{
+            text-align:center;
+            color:#0c4f70;
+
+        }
+        input[type="text"]{
+            color:black;
+            width:100%;
+            padding:10px;
+            margin-bottom:10px;
+            border:1px solid black;
+            border-radius :10px;
+            
+
+
+        }
+        button{
+            padding: 10px 20px;
+            background-color:#f533a3;
+            color:white;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+
+
+
+        }
+        button:hover{
+            background-color: green;
+            color:white;
+            cursor:pointer;
+            border: 2px solid black;
+
+        }
+        .task-list{
+            list-style-type:upper-roman;
+            padding:0;
+
+        }
+        .task-item{
+                padding:10px;
+                border-bottom:1px solid black;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+        }
+        .task-item .action{
+            display:flex;
+
+        }
+        .task-item .actions button{
+            margin-left:5px;
+            background-color:red;
+            color:white;
+
+        }
+        .task-item.completed{
+            text-decoration:line-through;
+
+
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TO-DO LIST</h1>
+        <input type="text"  id="taskInput" placeholder="ADD NEW TASK...">
+        <button onclick="addTask()" >ADD TASK</button>"
+        <h2>PENDING TASK</h2>
+        <ul id="pendingTasks" class="task-list"></ul>
+        <h2>COMPLETED TASK</h2>
+        <ul id="completedTasks" class="task-list"></ul>
+    </div>
+
+</body>
+<script>
+    function addTask() {
+            var taskInput = document.getElementById("taskInput");
+            var taskText = taskInput.value.trim();
+            if (taskText !== "") {
+                var taskItem = document.createElement("li");
+                taskItem.className = "task-item";
+                var timestamp = new Date().toLocaleString();
+                taskItem.innerHTML = `
+                    <span>${taskText}</span>
+                    <span>${timestamp}</span>
+                    <div class="actions">
+                        <button onclick="completeTask(this)">Complete</button>
+                        <button onclick="editTask(this)">Edit</button>
+                        <button onclick="deleteTask(this)">Delete</button>
+                    </div>
+                `;
+                document.getElementById("pendingTasks").appendChild(taskItem);
+                taskInput.value = "";
+                recordTask(taskText, timestamp, "pending");
+            }
+        }
+    function completeTask(button){
+        var taskItem=button.parentElement.parentElement;
+        taskItem.classList.add("completed");
+        document.getElementById("completedTasks").appendChild(taskItem);
+        var timestamp= new Date().toLocaleString();
+        taskItem.querySelector("span:nth-child(2)").innerText=timestamp;
+        recordTask(taskItem.querySelector("span:nth-child(1)").innerText, timestamp, "completed");
+
+    }
+    function editTask(button){
+        var taskItem=button.parentElement.parentElement;
+        var newText = prompt("ENTER NEW TASK:",taskItem.querySelector("span").innerText);
+        if(newText!=null){
+            taskItem.querySelector("span").innerText=newText;
+            var timestamp=new Date().toLocaleString();
+            taskItem.querySelector("span:nth-child(2)").innerText=timestamp;
+            recordTask(newText,timestamp, taskItem.classList.contains("completed")? "completed":"pending");
+
+        }
+
+
+        
+
+    }
+    function deleteTask(button){
+            var taskItem=button.parentElement.parentElement;
+            taskItem.remove();
+
+            
+        }
+    function recordTask(text,timestamp,status){
+        var record=`${timestamp}:${text}:(${status})`;
+        console.log(record);
+
+
+    }
+    
+   
+</script>
+
+</html>
